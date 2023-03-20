@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "WizLight": {
+      "commandName": "Project",
+      "commandLineArgs": "invalid.google.coms scene oceana -s 100 -b 100"
+    }
+  }
+}
