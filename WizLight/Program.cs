@@ -47,6 +47,7 @@ class WizLightSharp
         Trace.Indent();
 
         //AttachConsoleForCommandLineMode();
+
         // Root command and global options
         var rootCommand = new RootCommand("Wiz Lightbulb Remote Control App");
         var addressArgument = new Argument<IPAddress>(
@@ -179,7 +180,7 @@ class WizLightSharp
         colorCommand.SetHandler(
             (address, port, red, green, blue, warm, cold, brightness) =>
             {
-                RGBHandler(address.ToString(), port, red, green, blue, warm, cold, brightness);
+                RGBHandler(address, port, red, green, blue, warm, cold, brightness);
             }, addressArgument, portNumberOption, redArgument, greenArgument, blueArgument, warmArgument, coldArgument, brightnessOption);
         whiteCommand.SetHandler(
             (address, port, temp, brightness) =>
@@ -190,19 +191,19 @@ class WizLightSharp
         sceneCommand.SetHandler(
             (address, port, sceneid, speed, brightness) =>
             {
-                SceneHandler(address.ToString(), port, sceneid, speed, brightness);
+                SceneHandler(address, port, sceneid, speed, brightness);
             }, addressArgument, portNumberOption, sceneIdArgument, speedOption, brightnessOption);
 
         brightnessCommand.SetHandler(
             (address, port, action, amount) =>
             {
-                BrightnessHandler(address.ToString(), port, action, amount);
+                BrightnessHandler(address, port, action, amount);
             }, addressArgument, portNumberOption, brightActionArgument, brightValueArgument);
 
         powerCommand.SetHandler(
             (address, port, powerState, brightness) =>
             {
-                PowerHandler(address.ToString(), port, powerState, brightness);
+                PowerHandler(address, port, powerState, brightness);
             }, addressArgument, portNumberOption, powerArgument, brightnessOption);
 
 
@@ -213,17 +214,16 @@ class WizLightSharp
         return;
     }
 
-    private static void RGBHandler(string address, ushort? port, ushort red, ushort green, ushort blue, ushort cold, ushort warm, ushort? brightness)
+    private static void RGBHandler(IPAddress address, ushort? port, ushort red, ushort green, ushort blue, ushort cold, ushort warm, ushort? brightness)
     {
         Console.WriteLine("RGB {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}", address, port, red, green, blue, cold, warm, brightness);
 
-        IPAddress ipaddr = (Dns.GetHostAddresses(address)).FirstOrDefault();
-        WizBulb wizBulb = new WizBulb(ipaddr);
+        WizBulb wizBulb = new WizBulb(address);
 
         wizBulb.SetRGB(red, green, blue, cold, warm, brightness);
     }
 
-    private static void WhiteHandler(string address, ushort? port, UInt16 temp, ushort? brightness)
+    private static void WhiteHandler(IPAddress address, ushort? port, UInt16 temp, ushort? brightness)
     {
         Console.WriteLine("Scene {0}, {1}, {2}, {3}", address, port, temp, brightness);
 
